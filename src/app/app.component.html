@@ -1,4 +1,6 @@
-<div class="app">
-  <app-header></app-header>
-  <router-outlet></router-outlet>
+<div class="app h-screen flex flex-col bg-darkPurple">
+  <app-header *ngIf="authService.isLoggedIn()"></app-header>
+  <div class="flex h-full items-center justify-center">
+    <router-outlet></router-outlet>
+  </div>
 </div>

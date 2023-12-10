@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -6,7 +7,15 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
+
 })
 export class HomeComponent {
+
+  constructor(private authService: AuthService) { }
+
+  getUserName(): string {
+    return this.authService.getUserName() || '';
+
+  }
 
 }
