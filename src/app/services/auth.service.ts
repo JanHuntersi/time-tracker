@@ -106,6 +106,10 @@ export class AuthService {
     return this.isAuthenticated;
   }
 
+  getUserData(): User {
+    return this.user as User;
+  }
+
   getUserName(): string | null {
     return this.user?.username || null;
   }

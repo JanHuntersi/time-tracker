@@ -26,4 +26,10 @@ export class TimeTrackingService {
     return trackingTime;
   }
 
+  getCurrentTime(): number {
+    if (this.trackingStartTime !== 0) {
+      return Date.now() - this.trackingStartTime;
+    }
+    return 0;
+  }
 }

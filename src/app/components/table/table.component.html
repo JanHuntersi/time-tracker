@@ -1,1 +1,25 @@
-<p>table works!</p>
+<div class="container mx-auto mt-8">
+    <table class="min-w-full lightPurple border border-gray-300">
+      <thead>
+        <tr>
+          <th class="py-2 px-4 border-b">Page Name</th>
+          <th class="py-2 px-4 border-b">Total Time Spent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+            <td class="py-2 px-4 border-b">Home page</td>
+            <td class="py-2 px-4 border-b">{{ calculateTrackingTime(this.user.times.home) }}</td>
+        </tr>    
+        <tr>
+            <td class="py-2 px-4 border-b">About page</td>
+            <td class="py-2 px-4 border-b">{{ calculateTrackingTime(this.user.times.about) }}</td>
+        </tr>    
+        <tr>
+          <td class="py-2 px-4 border-b">Table page</td>
+          <td class="py-2 px-4 border-b">{{ JSON.stringify(dynamicTime$) }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
