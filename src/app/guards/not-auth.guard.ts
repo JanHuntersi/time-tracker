@@ -1,14 +1,12 @@
-import { AuthService } from '../services/auth.service';
 import { CanActivateFn, Router } from '@angular/router';
 
 export const NotAuthGuard: CanActivateFn = (route, state) => {
-  const router = new Router();
-  const authService = new AuthService(router);
+  const router = new Router
 
-  if (!authService.isLoggedIn()) {
+  if (!localStorage.getItem('user')) {
     return true;
   } else {
-    router.navigate(['/home']);
+    router.navigate(['/login']);
     return false;
   }
 };

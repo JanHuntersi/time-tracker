@@ -1,7 +1,8 @@
 // auth.service.ts
 import { Injectable } from '@angular/core';
-import { User } from '../models/user.model';
+import { User, TimeRecord } from '../models/user.model';
 import { Router } from '@angular/router';
+import { TimeTrackingService } from './time-tracking.service';
 @Injectable({
   providedIn: 'root',
 })
@@ -10,7 +11,7 @@ export class AuthService {
   private user: User | null = null;
   private allUsers: User[] = [];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private timeTrackingService: TimeTrackingService) {
     // Get all users from localStorage
     const storedUsers = localStorage.getItem('allUsers');
     if (storedUsers) {
@@ -29,7 +30,7 @@ export class AuthService {
         this.isAuthenticated = true;
       } catch (error) {
         console.error('Error parsing user data from localStorage:', error);
-        this.logout();
+        this.logoutUser();
       }
     }
   }
@@ -45,9 +46,7 @@ export class AuthService {
       }
     } catch (error) {
       console.error('Error during login or registration:', error);
-      // Handle the error (e.g., show a message to the user)
     }
-    // Navigate user to home page after successful login
     this.router.navigate(['/']);
   }
 
@@ -70,13 +69,37 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
+  async logoutUser(): Promise<void> {
 
-  logout(): void {
+    await this.updateUserTime(this.timeTrackingService.getPageName(), this.timeTrackingService.stopTracking());
+
     this.user = null;
     this.isAuthenticated = false;
-    //TODO call save time tracker
+
     localStorage.removeItem('user');
     this.router.navigate(['/login']);
+  }
+
+  saveUserToAllUsers(user: User): void {
+    const userIndex = this.allUsers.findIndex((u) => u.username === user.username);
+    if (userIndex >= 0) {
+      this.allUsers[userIndex] = user;
+      localStorage.setItem('allUsers', JSON.stringify(this.allUsers));
+    }
+    else { console.log('user not found in users'); }
+  }
+
+  async updateUserTime(pageName: string, elapsedTime: number): Promise<void> {
+    try {
+      if (!this.user) {
+        return;
+      }
+      this.user.times[pageName as keyof TimeRecord] += elapsedTime;
+      localStorage.setItem('user', JSON.stringify(this.user));
+      this.saveUserToAllUsers(this.user);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   isLoggedIn(): boolean {
@@ -85,9 +108,5 @@ export class AuthService {
 
   getUserName(): string | null {
     return this.user?.username || null;
-  }
-
-  getUser(): User | null {
-    return this.user;
   }
 }

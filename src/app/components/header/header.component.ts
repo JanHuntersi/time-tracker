@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -10,25 +12,31 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-
   showMenu: boolean = false;
+  activeRoute: string = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router, private route: ActivatedRoute) {
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.activeRoute = this.route.snapshot.firstChild?.routeConfig?.path || '';
+      });
+  }
 
   toggleMenu(): void {
     this.showMenu = !this.showMenu;
   }
 
-  logout(): void {
-    console.log("clicked logout")
-    this.authService.logout();
+  logoutUser(): void {
+    console.log("clicked logout");
+    this.authService.logoutUser();
   }
 
   getUsername(): string {
-    const user = this.authService.getUser();
-    if (user) {
-      return user.username;
-    }
-    return '';
+    return this.authService.getUserName() || '';
+  }
+
+  isActive(route: string): boolean {
+    return this.router.isActive(route, true);
   }
 }
