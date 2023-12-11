@@ -1,4 +1,3 @@
-// auth.service.ts
 import { Injectable } from '@angular/core';
 import { User, TimeRecord } from '../models/user.model';
 import { Router } from '@angular/router';
@@ -12,6 +11,7 @@ export class AuthService {
   private allUsers: User[] = [];
 
   constructor(private router: Router, private timeTrackingService: TimeTrackingService) {
+
     // Get all users from localStorage
     const storedUsers = localStorage.getItem('allUsers');
     if (storedUsers) {
@@ -81,6 +81,7 @@ export class AuthService {
   }
 
   saveUserToAllUsers(user: User): void {
+    // Find the user in allUsers and update it
     const userIndex = this.allUsers.findIndex((u) => u.username === user.username);
     if (userIndex >= 0) {
       this.allUsers[userIndex] = user;
@@ -90,6 +91,7 @@ export class AuthService {
   }
 
   async updateUserTime(pageName: string, elapsedTime: number): Promise<void> {
+    // Update the user's time for the current page
     try {
       if (!this.user) {
         return;

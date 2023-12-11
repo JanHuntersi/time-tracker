@@ -28,7 +28,6 @@ export class HeaderComponent {
   }
 
   logoutUser(): void {
-    console.log("clicked logout");
     this.authService.logoutUser();
   }
 

@@ -33,7 +33,6 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     const elapsedTime: number = this.timeTrackingService.stopTracking();
-    console.log("elapsed time: " + elapsedTime);
     this.authService.updateUserTime('table', elapsedTime);
   }
 
@@ -50,7 +49,6 @@ export class TableComponent implements OnInit, OnDestroy {
 
   private updateDynamicTime(): void {
     const timeElapsed = ((Date.now() - this.startingTime) + this.user.times.table);
-    console.log("Dynamic Time is", timeElapsed)
     this.dynamicTime = this.calculateTrackingTime(timeElapsed);
   }
 

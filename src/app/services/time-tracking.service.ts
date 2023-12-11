@@ -15,12 +15,10 @@ export class TimeTrackingService {
 
   startTracking(pageName: string): void {
     this.pageName = pageName;
-    console.log("started tracking for " + pageName);
     this.trackingStartTime = Date.now();
   }
 
   stopTracking(): number {
-    console.log("stopped tracking for " + this.pageName);
     const trackingTime = Date.now() - this.trackingStartTime;
     this.trackingStartTime = 0;
     return trackingTime;

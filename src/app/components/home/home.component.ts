@@ -18,7 +18,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     const elapsedTime: number = this.timeTrackingService.stopTracking();
-    console.log("elapsed time: " + elapsedTime);
     this.authService.updateUserTime('home', elapsedTime);
   }
 

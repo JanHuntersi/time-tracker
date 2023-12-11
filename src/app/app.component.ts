@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { AuthService } from './services/auth.service';
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -13,7 +12,5 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
   title = 'time-tracker';
-
   constructor(public authService: AuthService) { }
-
 }
