@@ -2,8 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TimeTrackingService } from '../../services/time-tracking.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
-import { Observable, Subscription, interval } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subscription, interval } from 'rxjs';
 
 @Component({
   selector: 'app-table',
@@ -16,7 +15,8 @@ export class TableComponent implements OnInit, OnDestroy {
 
   user: User = { username: '', times: { home: 0, table: 0, about: 0 } };
   private timeSubscription!: Subscription;
-  dynamicTime$: Observable<string> = new Observable<string>();
+  dynamicTime!: string;
+  private startingTime: number = 0;
 
   constructor(private timeTrackingService: TimeTrackingService, private authService: AuthService) {
     this.user = this.authService.getUserData();
@@ -24,10 +24,11 @@ export class TableComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.timeTrackingService.startTracking('table');
-
-    this.dynamicTime$ = interval(1000).pipe(
-      map(() => this.calculateTrackingTime(this.timeTrackingService.getCurrentTime() + this.user.times.table))
-    );
+    this.startingTime = Date.now();
+    this.updateDynamicTime();
+    this.timeSubscription = interval(1000).subscribe(() => {
+      this.updateDynamicTime();
+    });
   }
 
   ngOnDestroy(): void {
@@ -46,4 +47,11 @@ export class TableComponent implements OnInit, OnDestroy {
   private formatTimeUnit(unit: number): string {
     return unit < 10 ? `0${unit}` : unit.toString();
   }
+
+  private updateDynamicTime(): void {
+    const timeElapsed = ((Date.now() - this.startingTime) + this.user.times.table);
+    console.log("Dynamic Time is", timeElapsed)
+    this.dynamicTime = this.calculateTrackingTime(timeElapsed);
+  }
+
 }
